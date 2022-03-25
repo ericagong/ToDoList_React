@@ -11,14 +11,24 @@ function App() {
   }
   const handleSubmit = (event) => {
     event.preventDefault() // <form/> automatically submit input with button click or pressing enter, event.preventDefault() prevent its action.
+
     if (todo === '') {
       return // kill submit func if todo is empty.
     }
     handleTodos()
-    setTodo('')
+    setTodo('') // reset Todo
   }
-  console.log(todos)
-  const Todos = todos.map((td, index) => <li key={index}>{td}</li>)
+  const handleDelete = (deleteIndex) => {
+    const newTodos = todos.filter((td, index) => index !== deleteIndex)
+    console.log(newTodos)
+    setTodos(newTodos)
+  }
+  const Todos = todos.map((td, index) => (
+    <li key={index}>
+      {td}
+      <button onClick={() => handleDelete(index)}>Delete</button>
+    </li>
+  ))
   return (
     <div>
       <h1>My TODOs ({todos.length})</h1>
@@ -32,7 +42,7 @@ function App() {
         <button>Add Todo</button>
       </form>
       <hr />
-      {Todos}
+      <ul>{Todos}</ul>
     </div>
   )
 }

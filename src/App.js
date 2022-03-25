@@ -1,46 +1,38 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 function App() {
   const [todo, setTodo] = useState('')
   const [todos, setTodos] = useState([])
-  const onChange = (event) => {
-    setTodo(event.target.value || '') // For prevent React error.
+  const handleWrite = (event) => {
+    setTodo(event.target.value)
   }
-  const onSubmit = (event) => {
-    event.preventDefault() // Prevent <form/>'s original action.
+  const handleTodos = () => {
+    setTodos((curr) => [...curr, todo])
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault() // <form/> automatically submit input with button click or pressing enter, event.preventDefault() prevent its action.
     if (todo === '') {
-      return
+      return // kill submit func if todo is empty.
     }
-    setTodos((current) => [...current, todo])
+    handleTodos()
     setTodo('')
   }
-  const onClick = (index) => {
-    const newTodos = todos.filter((td, tdIndex) => index !== tdIndex)
-    setTodos(newTodos)
-  }
-  const printArr = () => {
-    console.log(todos)
-  }
-  useEffect(printArr, [todos])
+  console.log(todos)
+  const Todos = todos.map((td, index) => <li key={index}>{td}</li>)
   return (
-    <div className="App">
-      <h1>My Todos ({todos.length})</h1>
-      <form onSubmit={onSubmit}>
+    <div>
+      <h1>My TODOs ({todos.length})</h1>
+      <form onSubmit={handleSubmit}>
         <input
-          text="text"
+          type="text"
+          placeholder="Write your Todo"
           value={todo}
-          placeholder="Write your todo!"
-          onChange={onChange}
+          onChange={handleWrite}
         />
         <button>Add Todo</button>
       </form>
       <hr />
-      {todos.map((td, index) => (
-        <li key={index}>
-          {td}
-          <button onClick={() => onClick(index)}>Delete</button>
-        </li>
-      ))}
+      {Todos}
     </div>
   )
 }
